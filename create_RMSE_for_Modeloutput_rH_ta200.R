@@ -4,17 +4,18 @@
 if (!require(raster)){install.packages('raster')}
 library(sp)
 library(raster)
-if (!require(ncdf)){install.packages("ncdf", type = "source", configure.args="--with-netcdf-include=/usr/include")}
+if (!require(ncdf4)){install.packages("ncdf4", type = "source", configure.args="--with-netcdf-include=/usr/include")}
 library(ncdf4)
 library(rgdal)
 if(!require(caret)){install.packages('caret')}
 library(caret)
 if(!require(mapview)){install.packages('mapview')}
 library(mapview)
-
+#install.packages( "hydroGOF")
+library(hydroGOF)
 #####################################################
 
-filebase_path <- "/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/"
+filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_raster <- paste0(filebase_path, "raster")
 filebase_csv <- paste0(filebase_path, "csv/rH_ta_200/")
 filebase_shp <- paste0(filebase_path, "vector/plots_shp/")
@@ -26,7 +27,7 @@ fls_lst_o <- list.files(filebase_raster, full.names = TRUE)
 lst_fcl <- lapply(fld_lst, function(i){
     #i <- fld_lst[2]
     print(i)
-    fld_o <- paste0(gsub("/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/raster/", 
+    fld_o <- paste0(gsub("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/", 
                   "", i),"/")
     temp <- paste0(i,"/Kiliman_30km_Apr_May2014_SRF.2014041500.nc")
     netcdf_hurs <- stack(temp, varname = "hurs")
@@ -132,8 +133,8 @@ lst_fcl <- lapply(fld_lst, function(i){
         plots_names <- as.character(unique(plots_csv$plotID))
         out.df <- data.frame()
         
-        all_rmse_vals<- lapply(plots_names, function(j){
-          #j <- plots_names[1]
+        for (i in seq(1, length(plots_names))){
+          j <- plots_names[i]
           print(j)
           act_plot_shp <- plots_shp[plots_shp@data$PlotID == j,]
           act_plot_csv <- plots_csv[plots_csv$plotID == j,]
@@ -227,12 +228,12 @@ lst_fcl <- lapply(fld_lst, function(i){
                                rmse_rH, ME_rH, MAE_rH,
                                rmse_tas, ME_tas, MAE_tas)
           out.df <- rbind(act.out.df,out.df)
-          return(out.df)
-        })
+          #return(out.df)
+        }
         
-        error_stats.out.df <- do.call("rbind", all_rmse_vals) 
+        #error_stats.out.df <- do.call("rbind", all_rmse_vals) 
         
-        write.csv(error_stats.out.df, file = paste0(filebase_results, fld_o,
+        write.csv(out.df, file = paste0(filebase_results, fld_o,
                                                     "error_stats.csv"))
-    return(error_stats.out.df)
+    return(out.df)
 })
