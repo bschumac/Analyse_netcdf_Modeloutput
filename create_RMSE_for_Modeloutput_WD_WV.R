@@ -232,7 +232,7 @@ lst_fcl <- lapply(fld_lst, function(i){
     png(filename=paste0(filebase_results, fld_o,
                         j, "_WD.png"), width = 1280, height = 960)
     plot(act_merge$time, act_merge$WD_plot, lwd = 2,
-         type="l", ylim=c(0,3), main = paste0("Time series of WD at ", j))
+         type="l", ylim=c(0,360), main = paste0("Time series of WD at ", j))
     lines( act_merge$time, act_merge$WD, col="red", lty=2, lwd = 2)
     legend("bottomright", c("WD Plot", "WD Model"), col=c("black", "red"), lty=c(1,2))
     dev.off()
@@ -240,7 +240,7 @@ lst_fcl <- lapply(fld_lst, function(i){
     png(filename=paste0(filebase_results, fld_o,
                         j, "_WS.png"), width = 1280, height = 960)
     plot(act_merge$time, act_merge$WS_plot, lwd = 2,
-         type="l", ylim=c(0,3), main = paste0("Time series of WS at ", j))
+         type="l", ylim=c(0,10), main = paste0("Time series of WS at ", j))
     lines( act_merge$time, act_merge$WS, col="red", lty=2, lwd = 2)
     legend("bottomright", c("WS Plot", "WS Model"), col=c("black", "red"), lty=c(1,2))
     dev.off()
