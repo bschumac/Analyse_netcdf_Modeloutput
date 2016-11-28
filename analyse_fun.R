@@ -7,11 +7,8 @@ create_WS_WD <- function(netcdf_vas_kili,netcdf_uas_kili){
   values(raster_mask) <- vals
   act_ws_rst <- raster_mask
   act_wd_rst <- raster_mask
-  print(fld_o)
   for (j in seq(1,nlayers(netcdf_uas_kili))){
     print(paste("Layer", j))
-    values(act_wd_rst) <- 0
-    values(act_ws_rst) <- 0
     act_netcdf_uas_kili <-  netcdf_uas_kili[[j]]
     act_netcdf_vas_kili <-  netcdf_vas_kili[[j]]
     for (i in (seq(1,ncell(act_netcdf_uas_kili)))){
@@ -129,16 +126,14 @@ crp_raster <- function(raster, pointX = 37.353205, pointY = -3.076475, window_si
   ext1[2,1] <- ext1[2,1]-window_size*res(raster)[1]-res(raster)[1]/2
   ext1[3,1] <- ext1[3,1]+window_size*res(raster)[1]+res(raster)[1]/2
   ext1[4,1] <- ext1[4,1]+window_size*res(raster)[1]+res(raster)[1]/2
-  ext1[1,2] <- ext1[1,2]+window_size*res(raster)[1]+res(raster)[1]/2
-  ext1[2,2] <- ext1[2,2]-window_size*res(raster)[1]-res(raster)[1]/2
-  ext1[3,2] <- ext1[3,2]+window_size*res(raster)[1]+res(raster)[1]/2
-  ext1[4,2] <- ext1[4,2]-window_size*res(raster)[1]-res(raster)[1]/2
+  ext1[1,2] <- ext1[1,2]+window_size*res(raster)[2]+res(raster)[2]/2
+  ext1[2,2] <- ext1[2,2]-window_size*res(raster)[2]-res(raster)[2]/2
+  ext1[3,2] <- ext1[3,2]+window_size*res(raster)[2]+res(raster)[2]/2
+  ext1[4,2] <- ext1[4,2]-window_size*res(raster)[2]-res(raster)[2]/2
   
   ext1 <- extent(ext1)
   #ext1 <- as(ext1, 'SpatialPolygons')
-  
   raster_out <- crop(raster, ext1)
-  
   return(raster_out)
   
 }
