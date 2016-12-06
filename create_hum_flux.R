@@ -1,4 +1,4 @@
-  
+# implementation of van der Ent et al 2010  
   
   if (!require(raster)){install.packages('raster')}
   library(sp)

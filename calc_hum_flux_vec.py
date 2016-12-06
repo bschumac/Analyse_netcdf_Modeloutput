@@ -4,8 +4,8 @@ from netCDF4 import Dataset
 
 
 
-#scheme = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/Kiliman_20km_ERA_Apr_May2014_GrellFC01/"
-scheme = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/Kiliman_20km_ERA_Apr_May2014_Eman01/"
+scheme = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/Kiliman_20km_ERA_Apr_May2014_GrellFC01/"
+#scheme = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/Kiliman_20km_ERA_Apr_May2014_Eman01/"
 xdirect = "hum_flux_x_AprMay.nc"
 ydirect = "hum_flux_y_AprMay.nc"
 
@@ -26,6 +26,7 @@ len_uas = uas_np.shape[0]
 
 erg_arr_direc = np.empty(uas_np.shape)
 erg_arr_len = np.empty(uas_np.shape)
+pro = 0
 
 for x in range(0, len_uas, 1):
     if (x/len_uas*100>pro):
@@ -38,7 +39,7 @@ for x in range(0, len_uas, 1):
     erg_dir_rad = np.arctan2(act_mat_uas/erg_vlen_abs, act_mat_vas/erg_vlen_abs)
     erg_dir_deg = (erg_dir_rad * 180)/m.pi
     erg_dir_deg_pos = np.where(erg_dir_deg < 0.0, erg_dir_deg+360, erg_dir_deg)
-    erg_arr_direc[x] = (np.rot90(erg_dir_deg_pos,1))
+    erg_arr_direc[x] = (np.rot90(erg_dir_deg,1))
     erg_arr_len[x] = (np.rot90(erg_vlen_abs,1))
     #erg_arr_direc[x] = (np.rot90(vas_np[x],1))
     #erg_arr_len[x] = (np.rot90(uas_np[x],1))

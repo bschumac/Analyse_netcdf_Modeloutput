@@ -71,11 +71,12 @@ lst_models <- lapply(fld_lst_model, function(i){
 names(lst_models) <- paste0(gsub("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/", 
                                  "", fld_lst_model))  
 
-eman <- lst_models[[1]]
-grellfc <- lst_models[[2]]
+eman60 <- lst_models[[1]]
+eman80 <- lst_models[[2]]
+grellfc <- lst_models[[3]]
 
 
-ext_model <- extent(eman)
+ext_model <- extent(eman60)
 ext_CHIRPS <- extent(prc_CHIRPS)  
 ext_analysis <- ext_model
 ext_analysis@xmin <- max(c(ext_model@xmin, ext_CHIRPS@xmin))
@@ -85,12 +86,14 @@ ext_analysis@ymax <- min(c(ext_model@ymax, ext_CHIRPS@ymax))
 
 
 prc_CHIRPS <- crop(prc_CHIRPS, ext_analysis)
-eman_daily <- crop(eman, ext_analysis)
+eman60_daily <- crop(eman60, ext_analysis)
+eman80_daily <- crop(eman80, ext_analysis)
 grellfc_daily <- crop(grellfc, ext_analysis)
-prc_CHIRPS <- resample(prc_CHIRPS, eman_daily, method="bilinear")
+prc_CHIRPS <- resample(prc_CHIRPS, eman60_daily, method="bilinear")
 
 prc_CHIRPS <- crp_raster(prc_CHIRPS, window_size = 23)
-eman_daily <- crp_raster(eman_daily, window_size = 23)
+eman60_daily <- crp_raster(eman60_daily, window_size = 23)
+eman80_daily <- crp_raster(eman60_daily, window_size = 23)
 grellfc_daily <- crp_raster(grellfc_daily, window_size = 23)
 
 netcdf_topo <- read_modeloutput(temp, variable = "topo" )
@@ -98,19 +101,24 @@ netcdf_topo_crp <- crp_raster(netcdf_topo, window_size = 23)
 
 
 
-eman_var_ar <- as.array(mean((eman_daily- prc_CHIRPS)))
-eman_mat <- matrix(nrow=nrow(eman_daily), ncol=ncol(eman_daily))
+eman60_var_ar <- as.array(mean((eman60_daily- prc_CHIRPS)))
+eman60_mat <- matrix(nrow=nrow(eman60_daily), ncol=ncol(eman60_daily))
+
 topo_crp_ar <- as.array(netcdf_topo_crp)
 topo_crp_mat <- matrix(nrow=nrow(netcdf_topo_crp), ncol=ncol(netcdf_topo_crp))
 
 grellfc_var_ar <- as.array(mean((grellfc_daily- prc_CHIRPS)))
 grellfc_mat <- matrix(nrow=nrow(grellfc_daily), ncol=ncol(grellfc_daily))
 
+eman80_var_ar <- as.array(mean((eman80_daily- prc_CHIRPS)))
+eman80_mat <- matrix(nrow=nrow(eman80_daily), ncol=ncol(eman80_daily))
+
 
 
 for(i in seq(1,nrow(netcdf_topo_crp))){
   for (j in seq(1,ncol(netcdf_topo_crp))){
-    eman_mat[i,j] <- eman_var_ar[i,j,1]
+    eman80_mat[i,j] <- eman80_var_ar[i,j,1]
+    eman60_mat[i,j] <- eman60_var_ar[i,j,1]
     grellfc_mat[i,j] <- grellfc_var_ar[i,j,1]
     topo_crp_mat[i,j] <- topo_crp_ar[i,j,1]
   }
@@ -119,8 +127,9 @@ for(i in seq(1,nrow(netcdf_topo_crp))){
 x <- unique(sort(c(t(coordinates(netcdf_topo_crp)[,1]))))
 y <- unique(sort(c(t(coordinates(netcdf_topo_crp)[,2]))))
 z <- topo_crp_mat
-w_eman <- eman_mat
+w_eman <- eman60_mat
 w_grellfc<- grellfc_mat
+w_eman80 <- eman80_mat
 #plot(raster(w_eman), col = color)
 #oma=c(0,0,0,0)
 par(mfrow=c(1,1))
@@ -304,6 +313,87 @@ text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
 
 
 image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=color)
+
+
+###########################################################################################################################
+# 3. Plot
+zfacet <- w_eman80
+#zfacet <- w_eman[-1, -1] + w_eman[-1, -ncz] + w_eman[-nrz, -1] + w_eman[-nrz, -ncz]
+#zfacet[zfacet>25] <- NA
+#zfacet[zfacet<-25] <- NA
+
+facetcol <- cut(zfacet, color_sequence)
+par(xlog=xlg,ylog=ylg)
+range(zfacet, na.rm=TRUE)
+pmat <- persp(x = x, y = y, z = z, exp=0.15,phi=30,theta = 130, col = color[facetcol], box = FALSE)
+
+#image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=(color))
+title("EMAN80 - CHIRPS")
+
+min.x  <- round(min(x),1)
+max.x  <- round(max(x),1)
+x.axis <- seq(min.x, max.x,by=2) # by = 2 will get you 5 ticks
+min.y  <- round(min(y),1)
+max.y  <- round(max(y),1)
+y.axis <- seq(min.y, max.y,  by = 2) # by = 5 will get you 2 ticks
+min.z  <- round(min(z))
+max.z  <- round(max(z))
+z.axis <- seq(min.z, max.z, by=1000) # by = 5 will get you 7 ticks 
+
+lines(trans3d(c(x.axis,max(x)), max.y, min.z, pmat) , col="black", lwd=1.5)
+lines(trans3d(max(x), c(y.axis, max(y)), min.z, pmat) , col="black", lwd=1.5)
+lines(trans3d(min.x, max.y, z.axis, pmat) , col="black", lwd=1.5)
+
+
+tick.start <- trans3d(x.axis, max.y, min.z, pmat)
+tick.end   <- trans3d(x.axis, (max.y + 0.20), min.z, pmat)
+segments(tick.start$x, tick.start$y, tick.end$x, tick.end$y)
+
+#Note the (min.y - 0.20) in the calculation of tick.end. This places the second line, parallel to the X axis, at the position -0.20 on the Y axis (i.e., into negative/unplotted space).
+
+#The tick marks on the Y and Z axes can be handled similarly:
+
+tick.start <- trans3d(max.x, y.axis, min.z, pmat)
+tick.end   <- trans3d(max.x + 0.20, y.axis, min.z, pmat)
+segments(tick.start$x, tick.start$y, tick.end$x, tick.end$y)
+
+tick.start <- trans3d(min.x, max.y, z.axis, pmat)
+tick.end <- trans3d((min.x-0.20), (max.y + 0.20), z.axis, pmat)
+segments(tick.start$x, tick.start$y[1:8], tick.end$x[1:8], tick.end$y[1:8])
+
+labels <- as.character(rev(y.axis))
+label.pos <- trans3d(x.axis, (max.y + 0.25), min.z, pmat)
+text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), srt=0, cex=0.6)
+
+labels <- as.character(("Latitude"))
+label.pos <- trans3d(x.axis+1.5, (max.y + 0.65), min.z, pmat)
+text(label.pos$x[3], label.pos$y[3], labels=labels, adj=c(0, NA), cex=0.8, srt = 55)
+
+#The labels on the Y and Z axes are produced similarly:
+labels <- as.character((x.axis))
+label.pos <- trans3d((max.x + 0.45), y.axis, min.z, pmat)
+text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.6)
+
+labels <- as.character(("Longitude"))
+label.pos <- trans3d((max.x + 0.65), y.axis-0.5, min.z, pmat)
+text(label.pos$x[3], label.pos$y[3], labels=labels, adj=c(0, NA), cex=0.8, srt = 320)
+
+labels <- as.character(z.axis)
+label.pos <- trans3d((min.x-0.35), (max.y + 0.35), z.axis+550, pmat)
+text(label.pos$x, label.pos$y, labels=labels, adj=c(1, NA), cex=0.6, srt= 2.5)
+
+labels <- as.character(paste0("Range of EMAN-CHIRPS: ", 
+                              round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
+                              round(range(zfacet, na.rm=TRUE)[2],2)))
+label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
+text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
+
+
+
+image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=color)
+
+
+
 
 
 
