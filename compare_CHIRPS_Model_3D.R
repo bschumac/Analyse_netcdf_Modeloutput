@@ -37,6 +37,7 @@ source(paste0(filebase_code,"analyse_fun.R"))
 
 
 fld_lst_model <- list.files(filebase_model, full.names = TRUE, pattern="20")
+fld_lst_model <- fld_lst_model[2:4]
 res <- unique(na.omit(as.numeric(unlist(strsplit(fld_lst_model, "[^0-9]+")))))[1]
 
 fld_lst <- list.files(filebase_raster_CHIRPS, full.names = TRUE, pattern = c("2014_04"))
@@ -135,7 +136,7 @@ w_eman80 <- eman80_mat
 par(mfrow=c(1,1))
 mar.default <- c(5,4,4,2) + 0.1
 #par(mar.default)
-par(mar = mar.default + c(0, 0, 0, 4)) 
+par(mar = mar.default + c(0, 0, 0, 8)) 
 #?par
 
 #########################################################################

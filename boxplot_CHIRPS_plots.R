@@ -17,6 +17,7 @@ library(chron)
 library(stringr)
 library(hydroGOF)
 library(dplyr)
+library(data.table)
 #####################################################
 
 
@@ -130,13 +131,23 @@ for (i in seq(1,length(plot_names))){
   act_plot <- p_plots_df[,colnames(p_plots_df) %in% plot_names[i]]
   prc_dif[,colnames(prc_dif) %in% plot_names[i]] <- (act_CHIRPS-act_plot)
 }
+setcolorder(prc_dif, as.character(plots_unique$PlotID))
 
 prc_dif <- prc_dif[,order(plots_unique$Z_DEM_HMP)]
 
 
-boxplot(prc_dif, horizontal=FALSE, 
-        #names=round(plots_unique$Z_DEM_HMP[order(plots_unique$Z_DEM_HMP)],-2),
-        xlab=""
+boxplot(prc_dif, horizontal=TRUE, 
+        #names=colnames(prc_dif),
+        names=round(plots_unique$Z_DEM_HMP[order(plots_unique$Z_DEM_HMP)],-1),
+        ylim=c(-250, 350), 
+        ylab="Heigth in m above sealevel", xlab = "Difference CHIRPS - rain gauge in mm per Event"
 )
 
-prc_dif_mat <- prc_CHIRPS_mat-p_plots_mat
+error_scores <- read.csv(paste0(filebase_results, "/error_stats_CHIRPS_plots.csv"))
+error_scores <- error_scores[,-1]
+error_scores <- unique(error_scores)
+
+error_scores <- error_scores[match(colnames(prc_dif), error_scores$plotID),]
+error_scores$rmse_prc <- round(error_scores$rmse_prc, 1)
+
+text(-200, c(1:11,11.5), labels=c(error_scores$rmse_prc, "RMSE: "), cex=0.8)

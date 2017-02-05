@@ -3,7 +3,8 @@ import math as m
 import os
 from netCDF4 import Dataset
 
-flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/"
+#flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/"
+flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/second_model/20km_gul_6_6/"
 fld_lst = os.listdir(flds)
 #
 for i in range (0, len(fld_lst), 1):

@@ -180,8 +180,8 @@ for (i in seq(1, length(plots_names))){
   act_plot <- plot(act_merge$time, act_merge$prc_plot, lwd = 2,
                    type="l", ylim=c(0,80), main = paste0("Time series of prc at ", j))
   
-  lines(act_merge$time, act_merge$prc_CHIRPS, col="red", lty=2, lwd = 2)
-  col <- c("green", "blue", "orange")
+  #lines(act_merge$time, act_merge$prc_CHIRPS, col="red", lty=2, lwd = 2)
+  #col <- c("green", "blue", "orange")
   #for (i in seq(1, length(lst_models))){
   #  lines( lst_models[[i]]$time, lst_models[[i]]$prc, col=col[i], lty=2, lwd = 2)
   #}
