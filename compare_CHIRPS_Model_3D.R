@@ -139,8 +139,18 @@ mar.default <- c(5,4,4,2) + 0.1
 par(mar = mar.default + c(0, 0, 0, 8)) 
 #?par
 
+
+
 #########################################################################
 # 1.Plot
+png(filename="/home/dogbert/Desktop/GrellFC_CHIRPS.png", 
+    units="cm", 
+    width=30, 
+    height=20, 
+    res=150)
+
+
+
 w_grellfc<- grellfc_mat
 
 nb.col <- 100
@@ -162,7 +172,7 @@ facetcol <- cut(zfacet, color_sequence)
 pmat <- persp(x = x, y = y, z = z, exp=0.15,phi=30,theta = 130, col = color[facetcol], box = FALSE)
 #plot(mar.default)
 
-title("GRELLFC - CHIRPS")
+title("a)", adj=0)
 
 min.x  <- round(min(x),1)
 max.x  <- round(max(x),1)
@@ -216,18 +226,18 @@ labels <- as.character(z.axis)
 label.pos <- trans3d((min.x-0.35), (max.y + 0.35), z.axis+550, pmat)
 text(label.pos$x, label.pos$y, labels=labels, adj=c(1, NA), cex=0.6, srt= 2.5)
 
-labels <- as.character(paste0("Range of GRELLFC-CHIRPS: ", 
-                              round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
-                              round(range(zfacet, na.rm=TRUE)[2],2)))
-label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
-text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
+#labels <- as.character(paste0("Range of GRELLFC-CHIRPS: ", 
+                              #round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
+                              #round(range(zfacet, na.rm=TRUE)[2],2)))
+#label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
+#text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
 
 
 
 image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=color)
 
 
-
+dev.off()
 
 
 
@@ -240,6 +250,13 @@ image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=color)
 
 ###########################################################################################################################
 # 2. Plot
+png(filename="/home/dogbert/Desktop/EMAN_CHIRPS.png", 
+    units="cm", 
+    width=30, 
+    height=20, 
+    res=150)
+
+
 zfacet <- w_eman
 #zfacet <- w_eman[-1, -1] + w_eman[-1, -ncz] + w_eman[-nrz, -1] + w_eman[-nrz, -ncz]
 #zfacet[zfacet>25] <- NA
@@ -251,7 +268,7 @@ range(zfacet, na.rm=TRUE)
 pmat <- persp(x = x, y = y, z = z, exp=0.15,phi=30,theta = 130, col = color[facetcol], box = FALSE)
 
 #image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=(color))
-title("EMAN - CHIRPS")
+title("b)", adj=0)
 
 min.x  <- round(min(x),1)
 max.x  <- round(max(x),1)
@@ -305,16 +322,17 @@ labels <- as.character(z.axis)
 label.pos <- trans3d((min.x-0.35), (max.y + 0.35), z.axis+550, pmat)
 text(label.pos$x, label.pos$y, labels=labels, adj=c(1, NA), cex=0.6, srt= 2.5)
 
-labels <- as.character(paste0("Range of EMAN-CHIRPS: ", 
-                              round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
-                              round(range(zfacet, na.rm=TRUE)[2],2)))
-label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
-text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
+#labels <- as.character(paste0("Range of EMAN-CHIRPS: ", 
+#                             round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
+#                              round(range(zfacet, na.rm=TRUE)[2],2)))
+#label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
+#text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
 
 
 
 image.plot(legend.only=T, zlim=range(color_sequence, na.rm=TRUE), col=color)
 
+dev.off()
 
 ###########################################################################################################################
 # 3. Plot

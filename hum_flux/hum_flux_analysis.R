@@ -186,7 +186,7 @@ plot(ges_df$colSums, col = prc_df$col, cex=0.5, axes=FALSE)
 print(sum(ges_df$col == "red")/(sum(ges_df$col == "black")+sum(ges_df$col == "red"))*100)
 axis(side=2, labels=TRUE)
 axis(1, at=seq(1,length(ges_df$colSums),720), labels=substr(ges_df$datetime[seq(1,length(ges_df$colSums),720)],1,10))
-
+write.csv(ges_df, file = paste0(filebase_csv,"ges_df_hum_flux.csv"))
 
 # analyse Helen/Nilofar
 hellen <- ges_df[ges_df$datetime>"2014-03-26 00:00:00",]
@@ -194,23 +194,28 @@ hellen <- hellen[hellen$datetime<"2014-04-06 00:00:00",]
 sum(hellen$col == "black")
 sum(hellen$col == "red")
 hellen1 <- ges_df[ges_df$datetime>"2014-03-01 00:00:00",]
-hellen1 <- hellen1[hellen1$datetime<"2014-04-06 00:00:00",]
-sum(hellen1$col == "red")/(sum(hellen1$col == "black")+sum(hellen1$col == "red"))
+hellen1 <- hellen1[hellen1$datetime<="2014-05-31 00:00:00",]
+sum(hellen$col == "red")/(sum(hellen1$col == "black")+sum(hellen1$col == "red"))
 
 
 # DF compare for Table in Paper
 
 
 df_compare <- NULL
-df_compare <- data.frame(mth_lst,
-                         round(prc_evt,2),
-                         round(prc_sum,2),
-                         round(sum_mth,2),
-                         round(sum_mth_local,2),
-                         round(sum_mth_regional,2),
-                         round(sum_timesteps,2),
-                         round(sum_evt_local,2),
-                         round(sum_evt_regional,2))
+df_compare <- data.frame(real_mth,
+                         prc_evt,
+                         prc_sum,
+                         sum_mth,
+                         sum_mth_local,
+                         sum_mth_regional,
+                         sum_timesteps,
+                         sum_evt_local,
+                         sum_evt_regional)
+
+sum(df_compare$sum_mth)
+sum(df_compare$sum_mth_local)/sum(df_compare$sum_mth)
+
+sum(df_compare$sum_mth_local, df_compare$sum_mth_regional)
 df_compare$mth_lst <- paste0("2014-",mth_lst)
 df_compare$mth_lst <- as.yearmon(df_compare$mth_lst, format = "%Y-%B")
 df_compare <- df_compare[order(df_compare$mth_lst),]
@@ -238,7 +243,11 @@ linecol_black <- which(ges_df$negpos > 0)
 ges_df$linecol[linecol_red] <- "red"
 ges_df$linecol[linecol_black] <- "black"
 
-
+png(filename="/home/dogbert/Desktop/Fig_5.png", 
+    units="cm", 
+    width=20, 
+    height=20, 
+    res=300)
 ###################### Final Plot
 ######## JF
 par(mfrow=c(4,1))
@@ -247,6 +256,7 @@ jf_prc <- ges_df[ges_df$datetime<"2014-05-01 00:00:00",]
 jf_prc[jf_prc$datetime>="2014-03-01 00:00:00",]$colSums <- NA 
 used_date <- jf_prc[jf_prc$datetime<="2014-03-02 00:00:00",]$datetime
 plot(jf_prc$colSums, col = jf_prc$col, cex=0.5, axes=FALSE, xlab="", ylab="", ylim=c(0, 250))
+title("a)", adj=0)
 for(i in seq(1,length(used_date))){
   segments(i, 250, x1 = i, y1 = 250,col = jf_prc$linecol[i], lwd = 3)
 }
@@ -270,6 +280,7 @@ mam_prc[mam_prc$datetime>="2014-06-01 00:00:00",]$colSums <- NA
 used_date <- mam_prc[mam_prc$datetime<="2014-06-02 00:00:00",]$datetime
 
 plot(mam_prc$colSums, col = mam_prc$col, cex=0.5, axes=FALSE, xlab="", ylab="", ylim=c(0, 250))
+title("b)", adj=0)
 for(i in seq(1,length(used_date))){
   segments(i, 250, x1 = i, y1 = 250,col = mam_prc$linecol[i], lwd = 3)
 }
@@ -292,6 +303,7 @@ used_date <- jjas_prc[jjas_prc$datetime<="2014-10-01 00:00:00",]$datetime
 #used_date <- c(used_date,jjas_prc[jjas_prc$datetime<="2014-10-03 01:00:00",]$datetime)
 
 plot(jjas_prc$colSums, col = jjas_prc$col, cex=0.5, axes=FALSE, xlab="", ylab="", ylim=c(0, 250))
+title("c)", adj=0)
 for(i in seq(1,length(used_date))){
   segments(i, 250, x1 = i, y1 = 250,col = jjas_prc$linecol[i], lwd = 3)
 }
@@ -315,6 +327,7 @@ used_date <- ond_prc[ond_prc$datetime<="2015-01-02 00:00:00",]$datetime
 
 
 plot(ond_prc$colSums, col = ond_prc$col, cex=0.5, axes=FALSE, xlab="", ylab="", ylim=c(0, 250))
+title("d)", adj=0)
 for(i in seq(1,length(used_date))){
   segments(i, 250, x1 = i, y1 = 250,col = ond_prc$linecol[i], lwd = 3)
 }
@@ -326,7 +339,7 @@ axis(side=2, labels=TRUE, at=yticks)
 axis(1, at= xticks, labels=xlabels)
 #mtext(text="Prc Sum in mm", side = 2, line=2.5)
 
-
+dev.off()
 
 
 ############# Diurnal Structure of July Prec
