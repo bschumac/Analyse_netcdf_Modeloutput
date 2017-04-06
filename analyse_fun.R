@@ -137,3 +137,34 @@ crp_raster <- function(raster, pointX = 37.353205, pointY = -3.076475, window_si
   return(raster_out)
   
 }
+
+
+vec_plot <- function(x_stack, y_stack, toporast, cntry , kili, kenya, grvalley, nguru, rastnum, title="a)", div = 5000, window_size = 23, narrows = 500, maxval=150000, titleboo = FALSE){
+  humxy_s <- stack((x_stack[[rastnum]]), (y_stack[[rastnum]]))
+  values(humxy_s) <- values(humxy_s)/div
+  topo_crp <- crp_raster(toporast[[rastnum]], window_size = window_size)
+  # redefine print method of Posix, missing 00:00:00 
+  print.POSIXct <- function(x,...)print(format(x,"%Y-%m-%d %H:%M:%S"))
+  if (titleboo){
+    title = print(as.POSIXct(names(humxy_s)[1],format="X%Y.%m.%d.%H.%M.%S"))
+    #print(title)
+  }
+  
+  
+  my.settings <- rasterTheme(region = brewer.pal("YlGnBu", n = 9),   
+                             par.main.text = list(font = 2, just = "left",x = grid::unit(5, "mm")))
+  
+  #streamplot(hum_aug_1, parallel=FALSE)
+  
+  vecp <- vectorplot(humxy_s, isField = "dXY", region = topo_crp, margin = FALSE, par.settings = my.settings, 
+                          narrows = narrows, at = seq(0,maxval, 5000), main=title) + layer(sp.polygons(cntry, cex=2))+ layer(sp.points(kili, lwd=3, cex=1.5, pch=24, col="black"))  + layer(sp.polygons(nguru, fill="black")) +
+    layer(sp.polygons(kenya, fill="black")) + layer(sp.polygons(grvalley, fill="black")) + layer(sp.lines(rivers, col="darkblue"))
+
+   
+  print(vecp)
+  return(vecp)
+  
+  }
+
+
+

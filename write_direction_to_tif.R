@@ -36,7 +36,7 @@ res <- unique(na.omit(as.numeric(unlist(strsplit(flds, "[^0-9]+")))))[2]
 fld_o <- paste0(gsub(filebase_raster, "", flds))
 mth_lst <- c("Apr", "Aug", "Dec", "Feb", "Jan", "Jul", "Jun", "Mar", "May", "Nov", "Oct", "Sep")
 real_mth <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-
+hum_flux_total <- list()
 for (i in seq(1,length(mth_lst))){
   print(mth_lst[i])
   print("Changing Month...")
@@ -57,9 +57,10 @@ for (i in seq(1,length(mth_lst))){
   
   
   
-  hum_flux_res[hum_flux_res <60000] <- 0
+  hum_flux_res[hum_flux_res <25000] <- 0
   
   values(hum_direc_res) <- values(hum_direc)
   #writeRaster(hum_direc_res, file="/home/dogbert/Desktop/testApril.tif" )
+  #hum_flux_total[[i]] <- hum_flux_res
   writeRaster(hum_flux_res, file=paste0(filebase_raster,"/hum_flux_tif/hum_flux_",mth_lst[i],"_length.tif"  ))
 }  
