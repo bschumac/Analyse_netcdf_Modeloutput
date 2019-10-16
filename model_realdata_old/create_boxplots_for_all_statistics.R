@@ -9,11 +9,11 @@ library(ncdf4)
 library(rgdal)
 if(!require(caret)){install.packages('caret')}
 library(caret)
-if(!require(mapview)){install.packages('mapview')}
-library(mapview)
+#if(!require(mapview)){install.packages('mapview')}
+#library(mapview)
 
 
-filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
+filebase_path <- "/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_shp <- paste0(filebase_path, "vector/plots_shp/")
 filebase_results <- paste0(filebase_path, "results/")
 
@@ -23,7 +23,7 @@ all_stats_rH_tas <- data.frame()
 
 all_stats_rH_tas <- lapply(fld_lst, function(j){
     #j <- fld_lst[1]
-  fld_o <- paste0(gsub("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/results//Kiliman_30km_ERA_Apr_May2014_", 
+  fld_o <- paste0(gsub("/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/results//Kiliman_30km_ERA_Apr_May2014_", 
                        "", j))
   csv_lst <- list.files(j, full.names = TRUE, pattern=".csv$")
   act_stats <- read.table(csv_lst[1], sep = ",", header=TRUE, row.names = "X")

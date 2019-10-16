@@ -28,11 +28,13 @@ library(fields)
 filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_model <- paste0(filebase_path, "raster")
 filebase_raster_CHIRPS <- paste0(filebase_path,"CHIRPS_2014_daily/2014")
-filebase_shp <- paste0(filebase_path, "vector/plots_shp/")
+filebase_shp <- paste0(filebase_path, "vector/")
 filebase_code <- paste0(filebase_path, "code/Analyse_netcdf_Modeloutput/")
 filebase_results <- paste0(filebase_path, "results/CHIRPS_vs_model")
 
 source(paste0(filebase_code,"analyse_fun.R"))
+cntry <- readOGR(dsn = paste0(filebase_shp,"/world_boarders/TM_WORLD_BORDERS-0.3.shp"), layer = "TM_WORLD_BORDERS-0.3", stringsAsFactors = TRUE)
+
 
 
 
@@ -93,6 +95,13 @@ grellfc_daily <- crop(grellfc, ext_analysis)
 prc_CHIRPS <- resample(prc_CHIRPS, eman60_daily, method="bilinear")
 
 prc_CHIRPS <- crp_raster(prc_CHIRPS, window_size = 23)
+#ext_tuning <- extent(prc_CHIRPS)
+#p <- as(ext_tuning, 'SpatialPolygons')  
+#p <- as.data.frame(p)
+#crs(p) <- crs(prc_CHIRPS)
+#shapefile(p, paste0(filebase_shp,'tuning_ext.shp'))
+
+
 eman60_daily <- crp_raster(eman60_daily, window_size = 23)
 eman80_daily <- crp_raster(eman60_daily, window_size = 23)
 grellfc_daily <- crp_raster(grellfc_daily, window_size = 23)
@@ -171,6 +180,9 @@ facetcol <- cut(zfacet, color_sequence)
 
 pmat <- persp(x = x, y = y, z = z, exp=0.15,phi=30,theta = 130, col = color[facetcol], box = FALSE)
 #plot(mar.default)
+plot(cntry, add=T)
+
+
 
 title("a)", adj=0)
 
@@ -323,8 +335,8 @@ label.pos <- trans3d((min.x-0.35), (max.y + 0.35), z.axis+550, pmat)
 text(label.pos$x, label.pos$y, labels=labels, adj=c(1, NA), cex=0.6, srt= 2.5)
 
 #labels <- as.character(paste0("Range of EMAN-CHIRPS: ", 
-#                             round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
-#                              round(range(zfacet, na.rm=TRUE)[2],2)))
+                            round(range(zfacet, na.rm=TRUE)[1],2), " to ", 
+                            round(range(zfacet, na.rm=TRUE)[2],2)))
 #label.pos <- trans3d((max.x)+1, max.y-0.5, min.z, pmat)
 #text(label.pos$x, label.pos$y, labels=labels, adj=c(0, NA), cex=0.8)
 

@@ -9,8 +9,8 @@ library(ncdf4)
 library(rgdal)
 if(!require(caret)){install.packages('caret')}
 library(caret)
-if(!require(mapview)){install.packages('mapview')}
-library(mapview)
+#if(!require(mapview)){install.packages('mapview')}
+#library(mapview)
 library(hydroGOF)
 #install.packages("hydroGOF")
 library(chron)
@@ -21,7 +21,7 @@ library(data.table)
 #####################################################
 
 
-filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
+filebase_path <- "/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_raster <- paste0(filebase_path,"CHIRPS_2014_daily/2014")
 filebase_model <- paste0(filebase_path, "raster")
 filebase_shp <- paste0(filebase_path, "vector/plots_shp/")
@@ -47,20 +47,37 @@ plots_shp <- readOGR(paste0(filebase_shp,"PlotPoles_ARC1960_mod_20140807_final.s
                      layer=  lyr)
 plots_shp <- spTransform(plots_shp, crs(prc_apr_may))
 
-plots_csv <- read.csv("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/csv/prec/raw/plots.csv")
+
+
+#plots_csv <- read.csv("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/csv/prec/raw/plots.csv")
+
+plots_csv <- read.csv("/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/csv/prec/plots.csv")
+
+plots_csv_cof3 <- plots_csv[plots_csv$plotID=="cof3",]
+plots_csv <- plots_csv_cof3
 # data management plots_csv
 head(plots_csv)
 plots_csv$datetime <- as.POSIXct(plots_csv$datetime, format="%Y-%m-%dT%H:%M", tz="UTC")
 str(plots_csv$datetime)
 plots_csv$datetime <- plots_csv$datetime - 7200
 
-plots_csv$year <- as.numeric(substr(plots_csv$datetime, 1,4))
+plots_csv$yearmonth <-(substr(plots_csv$datetime, 1,7))
 plots_csv$month <- as.numeric(substr(plots_csv$datetime, 6,7))
 plots_csv$day <- as.numeric(substr(plots_csv$datetime, 9,10))
+tail(plots_csv)
+
+
 #plots_csv$hourmin <- (substr(plots_csv$datetime, 12,16))
 #plots_csv$datetime <- as.POSIXct(plots_csv$datetime, format="%Y-%m-%dT%H:%M", tz="")[26]
 #plots_csv$hourmin <- times(paste0(plots_csv$hourmin, ":00"))
 plots_csv <- plots_csv[plots_csv$year > 2013,]
+plots_csv <- plots_csv[plots_csv$year < 2016,]
+plots_csv_agg<- aggregate(plots_csv$P_RT_NRT, by=list(plots_csv$yearmonth), FUN="sum", na.rm=TRUE,na.action=NULL)
+
+plot(plots_csv_agg$x,xaxt="n", type="b")
+axis(1, at=c(seq(1,36,1)), labels=plots_csv_agg$Group.1,las=2)
+
+
 plots_csv <- plots_csv[plots_csv$year < 2015,]
 plots_csv <- plots_csv[plots_csv$month > 3,]
 plots_csv <- plots_csv[plots_csv$month < 6,]

@@ -2,12 +2,13 @@ import numpy as np
 import math as m
 import os
 from netCDF4 import Dataset
-
-#flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/"
-flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/second_model/20km_gul_6_6/"
+import matplotlib.pyplot as plt
+flds = "D:/Masterarbeit/Copernicus_Download/2013/"
+#flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/second_model/20km_gul_6_6/"
 fld_lst = os.listdir(flds)
 #
 for i in range (0, len(fld_lst), 1):
+    i = 0
     scheme  =  flds+fld_lst[i]+"/hum_flux/"
     print(scheme)
     xdirect = "hum_flux_x_direct.nc"
@@ -28,8 +29,8 @@ for i in range (0, len(fld_lst), 1):
 
     len_uas = uas_np.shape[0]
 
-    erg_arr_direc = np.empty(uas_np.shape)
-    erg_arr_len = np.empty(uas_np.shape)
+    erg_arr_direc = np.empty((uas_np.shape[0],uas_np.shape[2],uas_np.shape[1]))
+    erg_arr_len = np.empty((uas_np.shape[0],uas_np.shape[2],uas_np.shape[1]))
     pro = 0
 
     for x in range(0, len_uas, 1):
@@ -48,7 +49,7 @@ for i in range (0, len(fld_lst), 1):
         erg_arr_direc[x] = (np.fliplr(erg_arr_direc[x]))
         erg_arr_len[x] = (np.fliplr(erg_arr_len[x]))
 
-        
+       
     # the output array to write will be nx x ny
     nx = vas_np.shape[1]; ny = vas_np.shape[2]; nz = vas_np.shape[0]
     # open a new netCDF file for writing.

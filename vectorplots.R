@@ -19,6 +19,8 @@ library(caTools)
 library(RColorBrewer)
 library(rasterVis)
 library(gridExtra)
+library(rgdal)
+if (!require(rgdal)){install.packages('rgdal')}
 
 filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_raster <- paste0(filebase_path, "raster/")
@@ -41,7 +43,7 @@ grvalley <- readOGR(dsn = paste0(filebase_shp,"/riftvalley/great_rift_valley_ofb
 rivers <- readOGR(dsn = paste0(filebase_shp,"/rivers/ne_10m_rivers_lake_centerlines.shp"), 
                   layer = "ne_10m_rivers_lake_centerlines", stringsAsFactors = TRUE)
 
-rivers <- rivers[rivers$name %in% c("Pangani", "Wami", "Tana"),]
+#rivers <- rivers[rivers$name %in% c("Pangani", "Wami", "Tana"),]
 
 kili <- readOGR(dsn=paste0(filebase_shp,"plots_shp/plots_unique.shp"), layer= "plots_unique")                 
 kili <- spTransform(kili, CRSobj = crs(cntry))
@@ -450,7 +452,7 @@ png(filename="/home/dogbert/Desktop/Apr_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_apr_1 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 474, titleboo=TRUE)
+hum_apr_1 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 474, titleboo=TRUE, narrows = 200, lwd=2.5)
 dev.off()
 ###############
 #hum_apr_2 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 641, titleboo=TRUE)
@@ -478,7 +480,7 @@ png(filename="/home/dogbert/Desktop/May_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_may_4 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 1296, titleboo=TRUE)
+hum_may_4 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 1296, titleboo=TRUE, narrows = 200, lwd=2.5)
 dev.off()
 ###############################
 png(filename="/home/dogbert/Desktop/Jun_meso_flux.png", 
@@ -486,7 +488,7 @@ png(filename="/home/dogbert/Desktop/Jun_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_jun_1 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 1669, titleboo=TRUE)
+hum_jun_1 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 1669, titleboo=TRUE, narrows = 200, lwd=2.5)
 dev.off()
 ###dev.off()############################
 
@@ -506,7 +508,7 @@ png(filename="/home/dogbert/Desktop/Jul_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_jul_3 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 2847, titleboo=TRUE)
+hum_jul_3 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 2847, titleboo=TRUE, narrows = 200, lwd=2.5)
 
 dev.off()
 ###############################
@@ -519,7 +521,7 @@ png(filename="/home/dogbert/Desktop/Aug_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_aug_2 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 3308, titleboo=TRUE)
+hum_aug_2 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 3308, titleboo=TRUE, narrows = 200, lwd=2.5)
 dev.off()
 ###############################
 
@@ -535,5 +537,5 @@ png(filename="/home/dogbert/Desktop/Sep_meso_flux.png",
     width=20, 
     height=20, 
     res=150)
-hum_sep_2 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 4208, titleboo=TRUE)
+hum_sep_2 <- vec_plot(hum_x_stack_crp, hum_y_stack_crp, hum_len_total, cntry, kili, nguru, rastnum = 4208, titleboo=TRUE, narrows = 200, lwd=2.5)
 dev.off()

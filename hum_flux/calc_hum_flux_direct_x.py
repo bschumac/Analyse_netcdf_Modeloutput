@@ -8,8 +8,8 @@ import re
 from netCDF4 import Dataset
 #os.system("rm -rf /media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/Kiliman_20km_ERA_Aug2014_GrellFC01/hum_flux")
 
-flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/second_model/20km_gul_6_6/"
-#flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/"
+#flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/second_model/20km_gul_6_6/"
+flds = "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/2014_complete/"
 fld_lst = os.listdir(flds)
 
 

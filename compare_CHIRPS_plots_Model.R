@@ -9,8 +9,8 @@ library(ncdf4)
 library(rgdal)
 if(!require(caret)){install.packages('caret')}
 library(caret)
-if(!require(mapview)){install.packages('mapview')}
-library(mapview)
+#if(!require(mapview)){install.packages('mapview')}
+#library(mapview)
 library(hydroGOF)
 #install.packages("hydroGOF")
 library(chron)
@@ -19,7 +19,7 @@ library(hydroGOF)
 #####################################################
 
 
-filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
+filebase_path <- "/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_raster <- paste0(filebase_path,"CHIRPS_2014_daily/2014")
 filebase_model <- paste0(filebase_path, "raster")
 filebase_shp <- paste0(filebase_path, "vector/plots_shp/")
@@ -43,7 +43,7 @@ plots_shp <- readOGR(paste0(filebase_shp,"PlotPoles_ARC1960_mod_20140807_final.s
                      layer=  lyr)
 plots_shp <- spTransform(plots_shp, crs(prc_apr_may))
 
-plots_csv <- read.csv("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/csv/prec/raw/plots.csv")
+plots_csv <- read.csv("/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/csv/prec/raw/plots.csv")
 # data management plots_csv
 head(plots_csv)
 plots_csv$datetime <- as.POSIXct(plots_csv$datetime, format="%Y-%m-%dT%H:%M", tz="UTC")
@@ -85,7 +85,7 @@ for (i in seq(1, length(plots_names))){
   lst_models <- lapply(fld_lst_model, function(i){
    #i <- fld_lst_model[2]
     print(i)
-    fld_o <- paste0(gsub("/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/raster/",
+    fld_o <- paste0(gsub("/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/raster/",
                          "", i),"/")
     temp <- paste0(i,"/Kiliman_20km_Apr_May2014_SRF.2014041500.nc")
     netcdf_topo <- read_modeloutput(filepath = temp, variable = "topo")

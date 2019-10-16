@@ -8,30 +8,31 @@ library(ncdf4)
 library(rgdal)
 if(!require(caret)){install.packages('caret')}
 library(caret)
-if(!require(mapview)){install.packages('mapview')}
+#if(!require(mapview)){install.packages('mapview')}
 library(mapview)
 #install.packages( "hydroGOF")
 library(hydroGOF)
 #install.packages("NISTunits", dependencies = TRUE)
 library(NISTunits)
-#install.packages("emdbook")
+install.packages("emdbook")
 library(caTools)
 library(RColorBrewer)
 library(lubridate)
 library(emdbook)
-
 display.brewer.all()
 
-filebase_path <- "/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/"
+filebase_path <- "/media/benjamin/XChange/Masterarbeit/Analyse_Modeloutput/"
 filebase_raster <- paste0(filebase_path, "raster")
 filebase_csv <- paste0(filebase_path, "csv/")
 filebase_shp <- paste0(filebase_path, "vector/")
 filebase_results <- paste0(filebase_path, "results/")
 filebase_code <- paste0(filebase_path, "code/Analyse_netcdf_Modeloutput/")
 source(paste0(filebase_code,"analyse_fun.R"))
-
+/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/vector/Turkana Channel
+/media/dogbert/XChange/Masterarbeit/Analyse_Modeloutput/vector/
 # read vector data
 cntry <- readOGR(dsn = paste0(filebase_shp,"/world_boarders/TM_WORLD_BORDERS-0.3.shp"), layer = "TM_WORLD_BORDERS-0.3", stringsAsFactors = TRUE)
+turkana <- readOGR(dsn = paste0(filebase_shp,"/Turkana_Channel/turkana_channel.shp"), layer = "turkana_channel", stringsAsFactors = TRUE)
 
 
 fls_lst <- list.files(paste0(filebase_raster,"/hum_flux_tif/pca/"), full.names = TRUE)
@@ -59,11 +60,11 @@ xat = round(seq(extent(hum_pca[[2]])@xmin,
 breaks <- c(0,lseq(0.00001,0.0002, 5))
 
 names(hum_pca) <-real_mth
-png(filename="/home/dogbert/Desktop/Fig_8.png", 
+png(filename="/home/benjamin/Desktop/Fig_8.png", 
     units="cm", 
     width=20, 
     height=15, 
-    res=150)
+    res=300)
 
 spplot(hum_pca, col.regions=colorRampPalette((brewer.pal(9, "YlGnBu")))(256),
       #at = breaks,      
@@ -71,10 +72,12 @@ spplot(hum_pca, col.regions=colorRampPalette((brewer.pal(9, "YlGnBu")))(256),
        panel = function(...){
          panel.levelplot(...)
          sp.polygons(cntry, cex=0.1, lty=3, col="gray60")
-       },
+         sp.polygons(turkana, cex=0.4, lty=2, col="red")
+       }, 
        scales = list(x = list(at = xat, labels = paste0(as.character(xat)," E")),
                      y = list(at = yat, labels = c(paste0(as.character(abs(yat[1:2]))," S"),paste0(as.character(yat[3])," N"))))
       )
 
 
 dev.off()
+
